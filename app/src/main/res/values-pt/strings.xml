@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Simulador D20</string>
+    <string name="dice_roll_label">Rolar dado</string>
+    <string name="dice_type_label">Tipo do dado:</string>
+</resources>

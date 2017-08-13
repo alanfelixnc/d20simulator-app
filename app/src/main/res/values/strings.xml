@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">D20 Simulator</string>
+    <string name="dice_value" translatable="false">#</string>
+    <string name="dice_type_label">Dice type:</string>
+    <string name="dice_roll_label">Roll Dice</string>
+</resources>
