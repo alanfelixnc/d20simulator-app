@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 Random random = new Random();
                 int rollResult = random.nextInt(diceType);
 
-                diceValueLabel.setText(Integer.toString(rollResult + 1));
+                diceValueLabel.setText(" " + Integer.toString(rollResult + 1));
             }
         });
     }
