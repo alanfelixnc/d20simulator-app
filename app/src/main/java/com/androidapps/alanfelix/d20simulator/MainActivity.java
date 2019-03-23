@@ -3,24 +3,30 @@ package com.androidapps.alanfelix.d20simulator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.SeekBar;
 
 import java.util.Random;
+import java.util.concurrent.RunnableFuture;
 
 public class MainActivity extends AppCompatActivity {
 
     /* VARIÁVEIS */
     int diceType;
+    boolean stopAnim = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /* ANIMACOES */
+        final Animation diceshake = AnimationUtils.loadAnimation(this, R.anim.diceshake);
+
         /* COMPONENTES */
-        Button diceRollButton = (Button) findViewById(R.id.diceRollButton);
         final TextView diceTypeLabel = (TextView) findViewById(R.id.diceTypeLabel);
         final TextView diceValueLabel = (TextView) findViewById(R.id.diceVal);
         final SeekBar diceTypeSeek = (SeekBar) findViewById(R.id.diceTypeScroll);
@@ -51,14 +57,22 @@ public class MainActivity extends AppCompatActivity {
         diceType = setDiceType(diceTypeSeek.getProgress());
         diceTypeLabel.setText("Tipo do dado: D" + diceType);
 
-        /* INICIALIZA BOTÃO */
-        diceRollButton.setOnClickListener(new View.OnClickListener() {
+        /* INICIALIZA ROLL DO DADO */
+        diceValueLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Random random = new Random();
-                int rollResult = random.nextInt(diceType);
+                diceValueLabel.startAnimation(diceshake);
 
-                diceValueLabel.setText(" " + Integer.toString(rollResult + 1));
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                Random random = new Random();
+                                int rollResult = random.nextInt(diceType);
+
+                                diceValueLabel.setText(" " + Integer.toString(rollResult + 1));
+                            }
+                        }, 150);
             }
         });
     }

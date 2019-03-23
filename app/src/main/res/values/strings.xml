@@ -3,4 +3,5 @@
     <string name="dice_value" translatable="false">\ ??</string>
     <string name="dice_type_label">Dice type:</string>
     <string name="dice_roll_label">Roll Dice</string>
+    <string name="intructions">Touch the dice to roll. Use the range below to change dice type.</string>
 </resources>

@@ -3,4 +3,5 @@
     <string name="app_name">Simulador D20</string>
     <string name="dice_roll_label">Rolar dado</string>
     <string name="dice_type_label">Tipo do dado:</string>
+    <string name="intructions">Toque no dado para rolar uma jogada. Use o range abaixo para alterar o tipo do dado.</string>
 </resources>
