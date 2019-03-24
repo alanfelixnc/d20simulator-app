@@ -3,4 +3,11 @@
     <string name="app_name">Simulador D20</string>
     <string name="dice_roll_label">Rolar dado</string>
     <string name="dice_type_label">Tipo do dado:</string>
+    <string name="instructions">Toque no dado para rolar uma jogada. Use o range abaixo para alterar o tipo do dado.</string>
+    <string name="title_activity_login">Acessar</string>
+    <string name="prompt_email">Usuário (e-mail)</string>
+    <string name="prompt_password">Senha</string>
+    <string name="action_sign_in">Entrar ou registrar-se</string>
+    <string name="auth_null">Os campos devem ser preenchidos para fazer login/criar uma conta.</string>
+    <string name="auth_signup_fail">Autenticação falhou, confira os campos e tente novamente.</string>
 </resources>
