@@ -1,5 +1,8 @@
 package com.androidapps.alanfelix.d20simulator;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.SeekBar;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.Random;
 import java.util.concurrent.RunnableFuture;
 
@@ -17,11 +22,43 @@ public class MainActivity extends AppCompatActivity {
     /* VARIÁVEIS */
     int diceType;
     boolean stopAnim = false;
+    private FirebaseAuth mAuth;
+
+    /* Chama a tela de login */
+    private void callLoginScreen() {
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    /* Faz signout do app e retorna para a tela de login */
+    public void onBackPressed() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+        dialog.setMessage(R.string.logout_message).setCancelable(true)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mAuth.signOut();
+                        callLoginScreen();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+
+        AlertDialog alert = dialog.create();
+        alert.setTitle(R.string.logout_title);
+        alert.show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mAuth = FirebaseAuth.getInstance();
 
         /* ANIMACOES */
         final Animation diceshake = AnimationUtils.loadAnimation(this, R.anim.diceshake);

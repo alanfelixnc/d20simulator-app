@@ -11,4 +11,11 @@
     <string name="login_message" translatable="false"></string>
     <string name="auth_null">All fields must be filled in for login/sign up.</string>
     <string name="auth_signup_fail">Failed to sign up, check the credentials and try again.</string>
+    <string name="auth_password_fail">Password must be at least 6 characters.</string>
+    <string name="auth_email_fail">E-mail address must be a valid one.</string>
+    <string name="auth_no_connection">You have no internet connection at this moment.</string>
+    <string name="logout_message">Do you want do sign out?</string>
+    <string name="confirm">Yes</string>
+    <string name="cancel">No</string>
+    <string name="logout_title">Sign out</string>
 </resources>

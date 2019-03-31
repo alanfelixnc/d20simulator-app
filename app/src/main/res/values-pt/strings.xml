@@ -10,4 +10,11 @@
     <string name="action_sign_in">Entrar ou registrar-se</string>
     <string name="auth_null">Os campos devem ser preenchidos para fazer login/criar uma conta.</string>
     <string name="auth_signup_fail">Autenticação falhou, confira os campos e tente novamente.</string>
+    <string name="auth_password_fail">A senha deve conter no mínimo 6 caracteres.</string>
+    <string name="auth_email_fail">O endereço de e-mail inserido é inválido.</string>
+    <string name="auth_no_connection">Você não possui conexão com a internet neste momento.</string>
+    <string name="logout_message">Deseja sair para a tela de login?</string>
+    <string name="confirm">Sim</string>
+    <string name="cancel">Não</string>
+    <string name="logout_title">Sair da conta</string>
 </resources>
