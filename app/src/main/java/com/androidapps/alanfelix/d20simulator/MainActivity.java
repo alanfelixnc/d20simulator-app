@@ -2,6 +2,9 @@ package com.androidapps.alanfelix.d20simulator;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,7 +20,11 @@ import android.widget.TextView;
 import android.widget.SeekBar;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.RunnableFuture;
 
@@ -27,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     int diceType;
     boolean stopAnim = false;
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
+    private SimpleDateFormat date;
+    private Vibrator deviceVib;
 
     /* Chama a tela de login */
     private void callLoginScreen() {
@@ -76,6 +86,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+        /* VIBRAÇÃO */
+        deviceVib = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
         /* TOOLBAR */
         final Toolbar toolbar = findViewById(R.id.toolbar);
@@ -120,7 +135,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 diceValueLabel.startAnimation(diceshake);
-
+                if (Build.VERSION.SDK_INT >= 26) {
+                    deviceVib.vibrate(VibrationEffect.createOneShot(150, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    deviceVib.vibrate(150);
+                }
                 new android.os.Handler().postDelayed(
                         new Runnable() {
                             @Override
@@ -129,10 +148,22 @@ public class MainActivity extends AppCompatActivity {
                                 int rollResult = random.nextInt(diceType);
 
                                 diceValueLabel.setText(" " + Integer.toString(rollResult + 1));
+
+                                saveRollToDatabase(rollResult + 1, diceType);
                             }
                         }, 150);
             }
         });
+    }
+
+    /* Salva a jogada feita no banco de dados */
+    private void saveRollToDatabase(int rollResult, int diceValue) {
+        String userKey = mAuth.getUid();
+        String rollId = mDatabase.push().getKey();
+        String nowDate = date.format(new Date());
+        Rolls newRoll = new Rolls(rollId, diceValue, rollResult, nowDate);
+
+        mDatabase.child(userKey).child(rollId).setValue(newRoll);
     }
 
     private int setDiceType(int value) {
