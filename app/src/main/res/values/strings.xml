@@ -18,4 +18,5 @@
     <string name="confirm">Yes</string>
     <string name="cancel">No</string>
     <string name="logout_title">Sign out</string>
+    <string name="rolls_action">My rolls</string>
 </resources>

@@ -17,4 +17,5 @@
     <string name="confirm">Sim</string>
     <string name="cancel">Não</string>
     <string name="logout_title">Sair da conta</string>
+    <string name="rolls_action">Minhas jogadas</string>
 </resources>
