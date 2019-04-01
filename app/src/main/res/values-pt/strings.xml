@@ -18,4 +18,8 @@
     <string name="cancel">Não</string>
     <string name="logout_title">Sair da conta</string>
     <string name="rolls_action">Minhas jogadas</string>
+    <string name="logout">Sair da conta</string>
+    <string name="roll_val_title">Resultado</string>
+    <string name="roll_dice_title">Tipo de dado</string>
+    <string name="roll_date_title">Horário</string>
 </resources>

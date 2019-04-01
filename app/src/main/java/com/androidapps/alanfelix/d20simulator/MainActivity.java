@@ -1,5 +1,6 @@
 package com.androidapps.alanfelix.d20simulator;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -37,16 +38,23 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private SimpleDateFormat date;
     private Vibrator deviceVib;
+    private ProgressDialog Loading;
 
     /* Chama a tela de login */
     private void callLoginScreen() {
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
+        finish();
     }
 
-    @Override
+    /* Chama a tela de minhas jogadas */
+    private void callRollsScreen() {
+        Intent intent = new Intent(MainActivity.this, RollsActivity.class);
+        startActivity(intent);
+    }
+
     /* Faz signout do app e retorna para a tela de login */
-    public void onBackPressed() {
+    public void signOut() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
         dialog.setMessage(R.string.logout_message).setCancelable(true)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
@@ -78,6 +86,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.logout:
+                signOut();
+                break;
+
+            case R.id.view_rolls:
+                callRollsScreen();
+                break;
+
+            default:
+                //faznada
+        }
         return super.onOptionsItemSelected(item);
     }
 

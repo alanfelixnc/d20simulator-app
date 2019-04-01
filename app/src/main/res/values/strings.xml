@@ -19,4 +19,8 @@
     <string name="cancel">No</string>
     <string name="logout_title">Sign out</string>
     <string name="rolls_action">My rolls</string>
+    <string name="logout">Sign out</string>
+    <string name="roll_val_title">Roll</string>
+    <string name="roll_dice_title">Dice type</string>
+    <string name="roll_date_title">Date</string>
 </resources>
