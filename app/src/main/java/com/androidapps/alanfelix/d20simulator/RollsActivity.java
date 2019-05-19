@@ -3,6 +3,7 @@ package com.androidapps.alanfelix.d20simulator;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PersistableBundle;
@@ -15,9 +16,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
@@ -137,8 +140,9 @@ public class RollsActivity extends AppCompatActivity {
                 TextView rValue = v.findViewById(R.id.rollValue);
                 TextView rType = v.findViewById(R.id.diceType);
                 TextView rDate = v.findViewById(R.id.rollDate);
+                TextView rMap = v.findViewById(R.id.rollMap);
 
-                Rolls newroll = (Rolls) model;
+                final Rolls newroll = (Rolls) model;
 
                 String rollVal = getString(R.string.roll_val_title) + ": " + newroll.getRollValue();
                 String diceVal = getString(R.string.roll_dice_title) + ": D" + newroll.getDiceType();
@@ -146,8 +150,35 @@ public class RollsActivity extends AppCompatActivity {
                 rValue.setText(rollVal);
                 rType.setText(diceVal);
                 rDate.setText(dateVal);
+                if (newroll.getRollLat() != 0 && newroll.getRollLng() != 0) {
+                    rMap.setText(R.string.show_map_message);
+                } else {
+                    rMap.setText(null);
+                }
+
+                /* Evento ao clicar no item da lista */
+                v.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (newroll.getRollLat() != 0 && newroll.getRollLng() != 0) {
+                            String strUri = "http://maps.google.com/maps?q=loc:" +
+                                    newroll.getRollLat() + "," + newroll.getRollLng();
+                            Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                                    Uri.parse(strUri));
+
+                            intent.setClassName("com.google.android.apps.maps",
+                                    "com.google.android.maps.MapsActivity");
+
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(getBaseContext(), "Localização não registrada.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         };
+
+
         lv.setAdapter(adapter);
     }
 

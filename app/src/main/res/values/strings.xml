@@ -23,4 +23,5 @@
     <string name="roll_val_title">Roll</string>
     <string name="roll_dice_title">Dice type</string>
     <string name="roll_date_title">Date</string>
+    <string name="show_map_message">Touch to view location</string>
 </resources>

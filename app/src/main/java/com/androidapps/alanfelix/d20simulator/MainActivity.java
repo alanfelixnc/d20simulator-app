@@ -1,11 +1,18 @@
 package com.androidapps.alanfelix.d20simulator;
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +27,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.SeekBar;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -27,9 +38,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
-import java.util.concurrent.RunnableFuture;
 
 public class MainActivity extends AppCompatActivity {
+
+    /* CONSTANTES */
+    public static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
 
     /* VARIÁVEIS */
     int diceType;
@@ -39,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
     private SimpleDateFormat date;
     private Vibrator deviceVib;
     private ProgressDialog Loading;
+    private FusedLocationProviderClient mLocationClient;
+    double mLatitude = 0;
+    double mLongitude = 0;
+
 
     /* Chama a tela de login */
     private void callLoginScreen() {
@@ -109,6 +126,9 @@ public class MainActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
+        /* GEOLOCALIZAÇÃO */
+        mLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
         /* VIBRAÇÃO */
         deviceVib = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
@@ -176,12 +196,75 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /* Ao iniciar a activity solicita o uso de geolocalização */
+    @Override public void onStart() {
+        super.onStart();
+
+        if (!checkPermissions()) {
+            requestPermissions();
+        } else {
+            getLastLocation();
+        }
+    }
+
+    /* Checa as permissões de GPS */
+    private boolean checkPermissions() {
+        int permissionState = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        return permissionState == PackageManager.PERMISSION_GRANTED;
+    }
+
+    /* Solicita permissão de GPS */
+    private void requestPermissions() {
+        boolean shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION);
+
+        if (shouldProvideRationale) {
+            startLocationPermissionRequest();
+        } else {
+            startLocationPermissionRequest();
+        }
+    }
+
+    private void startLocationPermissionRequest() {
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSIONS_REQUEST_CODE);
+    }
+
+    /* Callback da solicitação de permissão */
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+            if (grantResults.length <= 0) {
+                /* request foi cancelado */
+            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                /* permissão concedida */
+                getLastLocation();
+            }
+        }
+    }
+
+    /* Obtém a localização mais recente */
+    private void getLastLocation() {
+        mLocationClient.getLastLocation()
+                .addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            mLatitude = task.getResult().getLatitude();
+                            mLongitude = task.getResult().getLongitude();
+                        } else {
+                            mLatitude = 0;
+                            mLongitude = 0;
+                        }
+                    }
+                });
+    }
+
     /* Salva a jogada feita no banco de dados */
     private void saveRollToDatabase(int rollResult, int diceValue) {
         String userKey = mAuth.getUid();
         String rollId = mDatabase.push().getKey();
         String nowDate = date.format(new Date());
-        Rolls newRoll = new Rolls(rollId, diceValue, rollResult, nowDate);
+        double rollLat = mLatitude;
+        double rollLng = mLongitude;
+        Rolls newRoll = new Rolls(rollId, diceValue, rollResult, nowDate, rollLat, rollLng);
 
         mDatabase.child(userKey).child(rollId).setValue(newRoll);
     }

@@ -6,16 +6,20 @@ public class Rolls {
     int diceType;
     int rollValue;
     String rollDate;
+    double rollLat;
+    double rollLng;
 
     public Rolls() {
 
     }
 
-    public Rolls(String rollId, int diceType, int rollValue, String rollDate) {
+    public Rolls(String rollId, int diceType, int rollValue, String rollDate, double rollLat, double rollLng) {
         this.rollId = rollId;
         this.diceType = diceType;
         this.rollValue = rollValue;
         this.rollDate = rollDate;
+        this.rollLat = rollLat;
+        this.rollLng = rollLng;
     }
 
     public String getRollId() {
@@ -32,5 +36,13 @@ public class Rolls {
 
     public int getRollValue() {
         return rollValue;
+    }
+
+    public double getRollLat() {
+        return rollLat;
+    }
+
+    public double getRollLng() {
+        return rollLng;
     }
 }

@@ -22,4 +22,5 @@
     <string name="roll_val_title">Resultado</string>
     <string name="roll_dice_title">Tipo de dado</string>
     <string name="roll_date_title">Horário</string>
+    <string name="show_map_message">Toque para ver no mapa</string>
 </resources>
